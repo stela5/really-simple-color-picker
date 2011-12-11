@@ -37,26 +37,38 @@
     $(element).hide();
 
   };
+
+  addSwatch = function(color, selector){
+	if (color == "transparent") {
+		swatch = $("<div class='color_swatch' id='color_transparent'>&nbsp;</div>");
+		swatch.css("background-color", "transparent");
+		swatch.css("background-image", "url(tile.gif)");
+	} else {
+		swatch = $("<div class='color_swatch'>&nbsp;</div>");
+		swatch.css("background-color", "#" + color);
+	}
+	swatch.bind("click", function(e){ changeColor($(this).css("background-color")) });
+	swatch.bind("mouseover", function(e){ 
+		$(this).css("border-color", "#598FEF"); 
+		$("input#color_value").val(toHex($(this).css("background-color")));    
+	}); 
+	swatch.bind("mouseout", function(e){ 
+		$(this).css("border-color", "#000");
+		$("input#color_value").val(toHex($(selectorOwner).css("background-color")));
+	});
+	if (selector) swatch.appendTo(selector);
+	else swatch.appendTo($("#color_selector"));
+  };
   
   buildSelector = function(){
     selector = $("<div id='color_selector'></div>");
-
      //add color pallete
      $.each($.fn.colorPicker.defaultColors, function(i){
-      swatch = $("<div class='color_swatch'>&nbsp;</div>")
-      swatch.css("background-color", "#" + this);
-      swatch.bind("click", function(e){ changeColor($(this).css("background-color")) });
-      swatch.bind("mouseover", function(e){ 
-        $(this).css("border-color", "#598FEF"); 
-        $("input#color_value").val(toHex($(this).css("background-color")));    
-        }); 
-      swatch.bind("mouseout", function(e){ 
-        $(this).css("border-color", "#000");
-        $("input#color_value").val(toHex($(selectorOwner).css("background-color")));
-        });
-      
-     swatch.appendTo(selector);
+	addSwatch(this, selector);
      });
+
+     //add transparent option
+     addSwatch("transparent", selector);
   
      //add HEX value field
      hex_field = $("<label for='color_value'>Hex</label><input type='text' size='8' id='color_value'/>");
@@ -115,7 +127,12 @@
     if(selectedValue = toHex(value)){
       $(selectorOwner).css("background-color", selectedValue);
       $(selectorOwner).prev("input").val(selectedValue).change();
-    
+
+	if ((selectedValue != "transparent") && (jQuery.inArray(selectedValue.substr(1), $.fn.colorPicker.defaultColors) == -1)) {
+		$.fn.colorPicker.addColors([selectedValue.substr(1)]);
+		addSwatch(selectedValue.substr(1));
+	}
+
       //close the selector
       hideSelector();    
     }
@@ -123,9 +140,10 @@
   
   //converts RGB string to HEX - inspired by http://code.google.com/p/jquery-color-utils
   toHex = function(color){
+    if (color == "transparent") return color;
     //valid HEX code is entered
     if(color.match(/[0-9a-fA-F]{3}$/) || color.match(/[0-9a-fA-F]{6}$/)){
-      color = (color.charAt(0) == "#") ? color : ("#" + color);
+      color = (color.charAt(0) == "#") ? color.toLowerCase() : ("#" + color.toLowerCase());
     }
     //rgb color value is entered (by selecting a swatch)
     else if(color.match(/^rgb\(([0-9]|[1-9][0-9]|[1][0-9]{2}|[2][0-4][0-9]|[2][5][0-5]),[ ]{0,1}([0-9]|[1-9][0-9]|[1][0-9]{2}|[2][0-4][0-9]|[2][5][0-5]),[ ]{0,1}([0-9]|[1-9][0-9]|[1][0-9]{2}|[2][0-4][0-9]|[2][5][0-5])\)$/)){
@@ -147,7 +165,7 @@
     }
     else color = false;
     
-    return color
+    return color;
   }
 
   
@@ -157,7 +175,7 @@
   };
   
   $.fn.colorPicker.defaultColors = 
-	[ '000000', '993300','333300', '000080', '333399', '333333', '800000', 'FF6600', '808000', '008000', '008080', '0000FF', '666699', '808080', 'FF0000', 'FF9900', '99CC00', '339966', '33CCCC', '3366FF', '800080', '999999', 'FF00FF', 'FFCC00', 'FFFF00', '00FF00', '00FFFF', '00CCFF', '993366', 'C0C0C0', 'FF99CC', 'FFCC99', 'FFFF99' , 'CCFFFF', '99CCFF', 'FFFFFF'];
+	['990033', 'ff3366', 'cc0033', 'ff0033', 'ff9999', 'cc3366', 'ffccff', 'cc6699', '993366', '660033', 'cc3399', 'ff99cc', 'ff66cc', 'ff99ff', 'ff6699', 'cc0066', 'ff0066', 'ff3399', 'ff0099', 'ff33cc', 'ff00cc', 'ff66ff', 'ff33ff', 'ff00ff', 'cc0099', '990066', 'cc66cc', 'cc33cc', 'cc99ff', 'cc66ff', 'cc33ff', '993399', 'cc00cc', 'cc00ff', '9900cc', '990099', 'cc99cc', '996699', '663366', '660099', '9933cc', '660066', '9900ff', '9933ff', '9966cc', '330033', '663399', '6633cc', '6600cc', '9966ff', '330066', '6600ff', '6633ff', 'ccccff', '9999ff', '9999cc', '6666cc', '6666ff', '666699', '333366', '333399', '330099', '3300cc', '3300ff', '3333ff', '3333cc', '0066ff', '0033ff', '3366ff', '3366cc', '000066', '000033', '0000ff', '000099', '0033cc', '0000cc', '336699', '0066cc', '99ccff', '6699ff', '003366', '6699cc', '006699', '3399cc', '0099cc', '66ccff', '3399ff', '003399', '0099ff', '33ccff', '00ccff', '99ffff', '66ffff', '33ffff', '00ffff', '00cccc', '009999', '669999', '99cccc', 'ccffff', '33cccc', '66cccc', '339999', '336666', '006666', '003333', '00ffcc', '33ffcc', '33cc99', '00cc99', '66ffcc', '99ffcc', '00ff99', '339966', '006633', '336633', '669966', '66cc66', '99ff99', '66ff66', '339933', '99cc99', '66ff99', '33ff99', '33cc66', '00cc66', '66cc99', '009966', '009933', '33ff66', '00ff66', 'ccffcc', 'ccff99', '99ff66', '99ff33', '00ff33', '33ff33', '00cc33', '33cc33', '66ff33', '00ff00', '66cc33', '006600', '003300', '009900', '33ff00', '66ff00', '99ff00', '66cc00', '00cc00', '33cc00', '339900', '99cc66', '669933', '99cc33', '336600', '669900', '99cc00', 'ccff66', 'ccff33', 'ccff00', '999900', 'cccc00', 'cccc33', '333300', '666600', '999933', 'cccc66', '666633', '999966', 'cccc99', 'ffffcc', 'ffff99', 'ffff66', 'ffff33', 'ffff00', 'ffcc00', 'ffcc66', 'ffcc33', 'cc9933', '996600', 'cc9900', 'ff9900', 'cc6600', '993300', 'cc6633', '663300', 'ff9966', 'ff6633', 'ff9933', 'ff6600', 'cc3300', '996633', '330000', '663333', '996666', 'cc9999', '993333', 'cc6666', 'ffcccc', 'ff3333', 'cc3333', 'ff6666', '660000', '990000', 'cc0000', 'ff0000', 'ff3300', 'cc9966', 'ffcc99', 'ffffff', 'eeeeee', 'dddddd', 'cccccc', 'bbbbbb', 'aaaaaa', '999999', '888888', '777777', '666666', '555555', '444444', '333333', '222222', '111111', '000000'];
   
 })(jQuery);
 

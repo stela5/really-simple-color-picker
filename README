@@ -1,8 +1,10 @@
 Really Simple Color Picker
 -------------------------------
 
+Forked by Stela 5 to add transparency option, remember custom colors, use a different icon, and apply the color set from jQuery Simple Color (http://recursive-design.com/projects/jquery-simple-color/).
+
 Written by Lakshan Perera 
-For more info please visit: http://www.web2media.net/laktek/?p=96
+For more info please visit: http://laktek.com/2008/10/27/really-simple-color-picker-in-jquery/
 Source code is hosted at: http://github.com/laktek/really-simple-color-picker
 
 Color Picker requires jQuery 1.2.6 or higher. So make sure to load it before Color Picker (there's no other dependencies!). 
@@ -37,4 +39,5 @@ Or completely change the color palette as you need...
 
 That’s all you have to do!
 
+MIT License: http://laktek.com/2008/10/27/really-simple-color-picker-in-jquery/#comment-167165922
 

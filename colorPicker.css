@@ -1,3 +1,4 @@
+/*
 div.color_picker {
   height: 16px;
   width: 16px;
@@ -7,13 +8,24 @@ div.color_picker {
   cursor: pointer;
   line-height: 16px;
 }
+*/
+
+div.color_picker {
+  height: 24px;
+  width: 25px;
+  padding: 0 !important;
+  border: 1px solid #ccc;
+  background: url(picker.gif) no-repeat top right;
+  cursor: pointer;
+  line-height: 24px;
+}
 
 div#color_selector {
-  width: 110px;
+  width: 270px;
   position: absolute;
-  border: 1px solid #598FEF;
+  border: 1px solid #AAAAAA;
   background-color: #EFEFEF;
-  padding: 2px;
+  padding: 2px 2px 0;
 }
   div#color_custom {width: 100%; float:left }
   div#color_custom label {font-size: 95%; color: #2F2F2F; margin: 5px 2px; width: 25%}
@@ -27,4 +39,8 @@ div.color_swatch {
   float: left;
   cursor: pointer;
   line-height: 12px;
+}
+
+div#color_transparent {
+  width: 30px;
 }
